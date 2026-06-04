@@ -1,7 +1,7 @@
 <?php 
 session_start();
 
-//Proteção de rota
+// Proteção de rota
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit;
@@ -14,10 +14,10 @@ $usuario_nome = $_SESSION['usuario_nome'];
 $tarefas = [];
 
 try {
-    //Busca apenas as tarefas do user logado, da mais recente a mais antiga
+    // Busca apenas as tarefas do usuário logado, da mais recente para a mais antiga
     $stmt = $pdo->prepare("SELECT * FROM tarefas WHERE usuario_id = ? ORDER BY criado_em DESC");
     $stmt->execute([$usuario_id]);
-    $tarefas = $stmt->fetchALL(PDO::FETCH_ASSOC);
+    $tarefas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     echo "Erro ao carregar tarefas: " . $e->getMessage();
 }
@@ -29,20 +29,87 @@ try {
     <meta charset="UTF-8">
     <title>Painel - Workflow</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .btn-sair { background-color: #dc3545; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; }
-        .btn-sair:hover { background-color: #c82333; }
-        .btn-novo { background-color: #28a745; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; display: inline-block; margin-bottom: 20px; }
-        .btn-novo:hover { background-color: #218838; }
-        
-        table { width: 100%; background: white; border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #0056b3; color: white; }
-        .status-pendente { color: #856404; background-color: #fff3cd; padding: 3px 8px; border-radius: 4px; font-size: 0.9em; }
-        .status-andamento { color: #004085; background-color: #cce5ff; padding: 3px 8px; border-radius: 4px; font-size: 0.9em; }
-        .status-concluido { color: #155724; background-color: #d4edda; padding: 3px 8px; border-radius: 4px; font-size: 0.9em; }
-        .vazio { text-align: center; padding: 20px; color: #666; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f4f4f9; 
+            margin: 0; 
+            padding: 20px; 
+        }
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: white; 
+            padding: 15px 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            margin-bottom: 20px; 
+        }
+        .btn-sair { 
+            background-color: #dc3545; 
+            color: white; 
+            padding: 8px 15px; 
+            text-decoration: none; 
+            border-radius: 4px; 
+        }
+        .btn-sair:hover { 
+            background-color: #c82333; 
+        }
+        .btn-novo { 
+            background-color: #28a745; 
+            color: white; 
+            padding: 10px 15px; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            display: inline-block; 
+            margin-bottom: 20px; 
+        }
+        .btn-novo:hover { 
+            background-color: #218838; 
+        }
+        table { 
+            width: 100%; 
+            background: white; 
+            border-collapse: collapse; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        th, td { 
+            padding: 12px 15px; 
+            text-align: left; 
+            border-bottom: 1px solid #ddd; 
+        }
+        th { 
+            background-color: #0056b3; 
+            color: white; 
+        }
+        .status-pendente { 
+            color: #856404; 
+            background-color: #fff3cd; 
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            font-size: 0.9em; 
+        }
+        .status-andamento { 
+            color: #004085; 
+            background-color: #cce5ff; 
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            font-size: 0.9em; 
+        }
+        .status-concluido { 
+            color: #155724; 
+            background-color: #d4edda; 
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            font-size: 0.9em; 
+        }
+        .vazio { 
+            text-align: center; 
+            padding: 20px; 
+            color: #666; 
+        }
     </style>
 </head>
 <body>
