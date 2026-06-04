@@ -68,9 +68,3 @@ Abra o terminal na pasta raiz do projeto e inicie o servidor embutido do PHP:
 ```bash
 php -S localhost:8000
 
-## 📸 Visualização do Sistema
-
-<p align="center">
-  <img src="assets/LOGIN.png" width="45%" alt="Tela de Login">
-  <img src="assets/PAINEL.png" width="45%" alt="Painel de Tarefas">
-</p>
